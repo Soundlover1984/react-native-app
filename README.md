@@ -1,16 +1,2 @@
-Завдання​
-Створити папку Screens
+https://www.loom.com/share/df424ea843054f21921054d2cf180377
 
-Створити компонент RegistrationScreen
-
-Створити компонент LoginScreen
-
-Створити екран PostsScreen
-
-Додати розмітку форми в компонент RegistrationScreen
-
-Додати розмітку форми в компонент LoginScreen
-
-Додати стилі до компонента RegistrationScreen
-
-Додати стилі до компонента LoginScreen
