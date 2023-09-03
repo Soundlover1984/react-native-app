@@ -19,7 +19,7 @@ const LoginScreen = () => {
     };
 
     const handleSubmitButtonPress = () => {
-        console.log(login, email, password);
+        console.log(email, password);
     };
 
     return (
