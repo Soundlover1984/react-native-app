@@ -14,7 +14,7 @@ const AuthenticatedUserInfo = () => {
                     Natali Romanova
                 </Text>
                 <Text style={{ fontSize: 11, fontWeight: 400 }}>
-                    natali.romanova@gmail.com
+                    email@example.com
                 </Text>
             </View>
         </View>

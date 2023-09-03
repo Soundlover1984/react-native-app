@@ -62,6 +62,7 @@ const RegistrationScreen = () => {
             <View style={styles.registrationForm}>
                 <InputComponent
                     placeholder={"Логін"}
+                    placeholderTextColor="#BDBDBD"
                     type={"text"}
                     name={"login"}
                     value={login}
@@ -69,6 +70,7 @@ const RegistrationScreen = () => {
                 />
                 <InputComponent
                     placeholder={"Адреса електронної пошти"}
+                    placeholderTextColor="#BDBDBD"
                     type={"email"}
                     name={"email"}
                     value={email}
@@ -78,6 +80,7 @@ const RegistrationScreen = () => {
                 <View style={{ position: "relative" }}>
                     <InputComponent
                         placeholder={"Пароль"}
+                        placeholderTextColor="#BDBDBD"
                         type={"password"}
                         name={"password"}
                         secureTextEntry={!showPassword}
@@ -92,7 +95,13 @@ const RegistrationScreen = () => {
                         }}
                         onPress={togglePasswordVisibility}
                     >
-                        <Text style={{ color: "#1B4371", fontSize: 16, fontWeight: 400, }}>
+                        <Text
+                            style={{
+                                color: "#1B4371",
+                                fontSize: 16,
+                                fontWeight: 400,
+                            }}
+                        >
                             {showPassword ? "Приховати" : "Показати"}
                         </Text>
                     </TouchableOpacity>

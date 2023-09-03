@@ -10,6 +10,7 @@ export const styles = StyleSheet.create({
         borderWidth: 1,
         borderRadius: 8,
         borderColor: "#E8E8E8",
+        fontSize: 16,
     },
     focusedTextInput: {
         borderColor: "#FF6C00",
