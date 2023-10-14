@@ -1,5 +1,14 @@
 import React, { useState } from "react";
-import { View, Image, Text, TouchableOpacity } from "react-native";
+import {
+    View,
+    Image,
+    Text,
+    TouchableOpacity,
+    KeyboardAvoidingView,
+    Platform,
+    Keyboard,
+    TouchableWithoutFeedback,
+} from "react-native";
 import * as ImagePicker from "expo-image-picker";
 
 import { styles } from "./RegistrationScreenStyles";
@@ -23,7 +32,7 @@ const RegistrationScreen = () => {
     };
 
     const handleSubmitButtonPress = () => {
-        console.log(login, email, password);
+        console.log({ login, email, password });
     };
 
     const uploadAvatar = async () => {
@@ -38,106 +47,110 @@ const RegistrationScreen = () => {
         if (!result.canceled) setUserAavatar(result.assets[0].uri);
     };
     return (
-        <View style={styles.registrationContainer}>
-            <View style={styles.userImageContainer}>
-                {userAvatar && (
-                    <Image
-                        source={{ uri: userAvatar }}
-                        style={{ width: 120, height: 120, borderRadius: 16 }}
-                    />
-                )}
-                {!userAvatar ? (
-                    <RegistrationImageAddButton
-                        onPress={uploadAvatar}
-                    ></RegistrationImageAddButton>
-                ) : (
-                    <RegistrationImageRemoveButton
-                        onPress={handleRemoveImage}
-                    ></RegistrationImageRemoveButton>
-                )}
-            </View>
-
-            <Text style={styles.registrationFormHeader}>Реєстрація</Text>
-
-            <View style={styles.registrationForm}>
-                <InputComponent
-                    placeholder={"Логін"}
-                    placeholderTextColor="#BDBDBD"
-                    type={"text"}
-                    name={"login"}
-                    value={login}
-                    onChangeText={setLogin}
-                />
-                <InputComponent
-                    placeholder={"Адреса електронної пошти"}
-                    placeholderTextColor="#BDBDBD"
-                    type={"email"}
-                    name={"email"}
-                    value={email}
-                    onChangeText={setEmail}
-                />
-
-                <View style={{ position: "relative" }}>
-                    <InputComponent
-                        placeholder={"Пароль"}
-                        placeholderTextColor="#BDBDBD"
-                        type={"password"}
-                        name={"password"}
-                        secureTextEntry={!showPassword}
-                        value={password}
-                        onChangeText={setPassword}
-                    />
-                    <TouchableOpacity
-                        style={{
-                            position: "absolute",
-                            right: 16,
-                            top: 16,
-                        }}
-                        onPress={togglePasswordVisibility}
-                    >
-                        <Text
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+            <View style={styles.registrationContainer}>
+                <View style={styles.userImageContainer}>
+                    {userAvatar && (
+                        <Image
+                            source={{ uri: userAvatar }}
                             style={{
-                                color: "#1B4371",
-                                fontSize: 16,
-                                fontWeight: 400,
+                                width: 120,
+                                height: 120,
+                                borderRadius: 16,
                             }}
-                        >
-                            {showPassword ? "Приховати" : "Показати"}
-                        </Text>
-                    </TouchableOpacity>
+                        />
+                    )}
+                    {!userAvatar ? (
+                        <RegistrationImageAddButton
+                            onPress={uploadAvatar}
+                        ></RegistrationImageAddButton>
+                    ) : (
+                        <RegistrationImageRemoveButton
+                            onPress={handleRemoveImage}
+                        ></RegistrationImageRemoveButton>
+                    )}
                 </View>
-            </View>
 
-            <TouchableOpacity
-                onPress={handleSubmitButtonPress}
-                style={styles.registrationFormSubmitButton}
-                title="Зареєструватися"
-            >
-                <Text
-                    style={{
-                        fontSize: 16,
-                        textAlign: "center",
-                        color: "#ffffff",
-                        fontWeight: 400,
-                    }}
+                <Text style={styles.registrationFormHeader}>Реєстрація</Text>
+                <KeyboardAvoidingView
+                    behavior={Platform.OS == "ios" ? "padding" : "height"}
                 >
-                    Зареєструватися
-                </Text>
-            </TouchableOpacity>
-            <TouchableOpacity>
-                <Text
-                    style={{
-                        fontSize: 16,
-                        color: "#1B4371",
-                        textAlign: "center",
-                        fontWeight: 400,
-                    }}
+                    <View style={styles.registrationForm}>
+                        <InputComponent
+                            placeholder={"Логін"}
+                            placeholderTextColor="#BDBDBD"
+                            type={"text"}
+                            name={"login"}
+                            value={login}
+                            onChangeText={setLogin}
+                        />
+                        <InputComponent
+                            placeholder={"Адреса електронної пошти"}
+                            placeholderTextColor="#BDBDBD"
+                            type={"email"}
+                            name={"email"}
+                            value={email}
+                            onChangeText={setEmail}
+                        />
+
+                        <View style={{ position: "relative" }}>
+                            <InputComponent
+                                placeholder={"Пароль"}
+                                placeholderTextColor="#BDBDBD"
+                                type={"password"}
+                                name={"password"}
+                                secureTextEntry={!showPassword}
+                                value={password}
+                                onChangeText={setPassword}
+                            />
+                            <TouchableOpacity
+                                style={{
+                                    position: "absolute",
+                                    right: 16,
+                                    top: 16,
+                                }}
+                                onPress={togglePasswordVisibility}
+                            >
+                                <Text style={{ color: "#1B4371", fontSize:16, fontWeight:400 }}>
+                                    {showPassword ? "Приховати" : "Показати"}
+                                </Text>
+                            </TouchableOpacity>
+                        </View>
+                    </View>
+                </KeyboardAvoidingView>
+
+                <TouchableOpacity
+                    onPress={handleSubmitButtonPress}
+                    style={styles.registrationFormSubmitButton}
+                    title="Зареєструватися"
                 >
-                    Вже є акаунт? Увійти
-                </Text>
-            </TouchableOpacity>
-        </View>
+                    <Text
+                        style={{
+                            fontSize: 16,
+                            textAlign: "center",
+                            color: "#ffffff",
+                            fontWeight:400,
+                        }}
+                    >
+                        Зареєструватися
+                    </Text>
+                </TouchableOpacity>
+                <TouchableOpacity>
+                    <Text
+                        style={{
+                            fontSize: 16,
+                            color: "#1B4371",
+                            textAlign: "center",
+                            fontWeight: 400,
+                        }}
+                    >
+                        Вже є акаунт? Увійти
+                    </Text>
+                </TouchableOpacity>
+            </View>
+        </TouchableWithoutFeedback>
     );
 };
 
 export default RegistrationScreen;
+
