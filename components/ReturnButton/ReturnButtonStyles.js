@@ -1,9 +1,9 @@
 import { StyleSheet } from "react-native";
 
 export const styles = StyleSheet.create({
-    logoutButton: {
+    returnButton: {
         // position: "absolute",
-        // right: 16,
+        // left: 16,
         // bottom: 11,
     },
 });

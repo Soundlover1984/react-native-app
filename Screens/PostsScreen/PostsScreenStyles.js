@@ -20,6 +20,7 @@ export const styles = StyleSheet.create({
         borderStyle: "solid",
         borderColor: "#E8E8E8",
         borderBottomWidth: 1,
+        // backgroundColor: "#000000"
     },
     postsScreenHeader: {
         marginLeft: "auto",

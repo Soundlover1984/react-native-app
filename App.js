@@ -1,9 +1,18 @@
-import { Image, StyleSheet, View } from "react-native";
+import "react-native-gesture-handler";
+import React from "react";
+import { NavigationContainer } from "@react-navigation/native";
+import { createStackNavigator } from "@react-navigation/stack";
+import { StyleSheet, View } from "react-native";
 import { useFonts } from "expo-font";
 
 import RegistrationScreen from "./Screens/RegistrationScreen";
 import LoginScreen from "./Screens/LoginScreen";
 import PostsScreen from "./Screens/PostsScreen/PostsScreen";
+import CommentsScreen from "./Screens/CommentsScreen";
+import MapScreen from "./Screens/MapScreen/MapScreen";
+import Home from "./Screens/Home/Home";
+
+const MainStack = createStackNavigator();
 
 const App = () => {
     const [fontsLoaded] = useFonts({
@@ -19,14 +28,46 @@ const App = () => {
 
     return (
         <View style={styles.container}>
-            <Image
-                source={require("./assets/images/app_background.jpg")}
-                resizeMode="cover"
-                style={styles.image}
-            />
-            {/* <RegistrationScreen /> */}
-            <LoginScreen />
-            {/* <PostsScreen /> */}
+            <NavigationContainer>
+                <MainStack.Navigator initialRouteName="Login">
+                    <MainStack.Screen
+                        options={{ headerShown: false }}
+                        name="Home"
+                        component={Home}
+                    />
+                    <MainStack.Screen
+                        options={{ headerShown: false }}
+                        name="Registration"
+                        component={RegistrationScreen}
+                    />
+                    <MainStack.Screen
+                        options={{ headerShown: false }}
+                        name="Login"
+                        component={LoginScreen}
+                    />
+                    <MainStack.Screen
+                        options={{ headerShown: false }}
+                        name="Posts"
+                        component={PostsScreen}
+                    />
+                    {/* <MainStack.Screen
+                        options={{ headerShown: false }}
+                        name="Create Post"
+                        component={CreatePostsScreen}
+                    /> */}
+                    <MainStack.Screen
+                        options={{ headerShown: false }}
+                        name="Comments"
+                        component={CommentsScreen}
+                    />
+                    {/* <MainStack.Screen
+                        options={{ headerShown: false }}
+                        name="Profile"
+                        component={ProfileScreen}
+                    /> */}
+                    <MainStack.Screen name="Map" component={MapScreen} />
+                </MainStack.Navigator>
+            </NavigationContainer>
         </View>
     );
 };
@@ -36,12 +77,6 @@ const styles = StyleSheet.create({
         position: "relative",
         flex: 1,
         backgroundColor: "#fff",
-    },
-    image: {
-        position: "absolute",
-        width: "100%",
-        flex: 1,
-        justifyContent: "center",
     },
 });
 
