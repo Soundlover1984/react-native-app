@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
     View,
     Text,
@@ -9,6 +9,8 @@ import {
     TouchableWithoutFeedback,
     Keyboard,
 } from "react-native";
+import { Camera } from "expo-camera";
+import * as MediaLibrary from "expo-media-library";
 import { Svg, Path, Rect, G, Defs, ClipPath } from "react-native-svg";
 import * as ImagePicker from "expo-image-picker";
 
@@ -16,12 +18,28 @@ import { styles } from "./CreatePostsScreenStyles";
 import ReturnButton from "../../components/ReturnButton";
 
 const CreatePostsScreen = () => {
+    const [hasPermission, setHasPermission] = useState(null);
+    const [cameraRef, setCameraRef] = useState(null);
+    const [type, setType] = useState(Camera.Constants.Type.back);
+
     const [postPhoto, setPostPhoto] = useState(null);
     const [photoName, setPhotoName] = useState("");
 
-    const handleReturnPress = () => {
-        console.log("Logout");
-    };
+    useEffect(() => {
+        (async () => {
+            const { status } = await Camera.requestCameraPermissionsAsync();
+            await MediaLibrary.requestPermissionsAsync();
+
+            setHasPermission(status === "granted");
+        })();
+    }, []);
+
+    if (hasPermission === null) {
+        return <View />;
+    }
+    if (hasPermission === false) {
+        return <Text>No access to camera</Text>;
+    }
 
     const handleRemoveImage = () => {
         setPostPhoto(null);
@@ -45,14 +63,6 @@ const CreatePostsScreen = () => {
                 behavior={Platform.OS == "ios" ? "padding" : "height"}
             >
                 <View style={styles.createPostsScreenContainer}>
-                    {/* <View style={styles.createPostsHeaderContainer}>
-                        <ReturnButton
-                            onPress={handleReturnPress}
-                        ></ReturnButton>
-                        <Text style={styles.createPostsHeader}>
-                            Створити публікацію
-                        </Text>
-                    </View> */}
                     <View style={{ paddingLeft: 16, paddingRight: 16 }}>
                         <View style={styles.postPhotoContainer}>
                             <Image
@@ -63,47 +73,62 @@ const CreatePostsScreen = () => {
                                     borderRadius: 8,
                                 }}
                             />
-                            <TouchableOpacity
-                                onPress={uploadPhoto}
-                                style={[
-                                    styles.addPhotoButton,
-                                    postPhoto
-                                        ? {
-                                              backgroundColor:
-                                                  "rgba(255, 255, 255, 0.3)",
-                                          }
-                                        : {},
-                                ]}
+                            <Camera
+                                style={{ flex: 1 }}
+                                type={type}
+                                ref={setCameraRef}
                             >
-                                <Svg
-                                    width="24"
-                                    height="24"
-                                    viewBox="0 0 24 24"
-                                    fill="none"
-                                    xmlns="http://www.w3.org/2000/svg"
+                                <TouchableOpacity
+                                    onPress={async () => {
+                                        if (cameraRef) {
+                                            const { uri } =
+                                                await cameraRef.takePictureAsync();
+                                            await MediaLibrary.createAssetAsync(
+                                                uri
+                                            );
+                                        }
+                                    }}
+                                    style={[
+                                        styles.addPhotoButton,
+                                        postPhoto
+                                            ? {
+                                                  backgroundColor:
+                                                      "rgba(255, 255, 255, 0.3)",
+                                              }
+                                            : {},
+                                    ]}
                                 >
-                                    <G clip-path="url(#clip0_36_0)">
-                                        <Path
-                                            d="M11.9998 15.2C13.7671 15.2 15.1998 13.7673 15.1998 12C15.1998 10.2327 13.7671 8.79999 11.9998 8.79999C10.2325 8.79999 8.7998 10.2327 8.7998 12C8.7998 13.7673 10.2325 15.2 11.9998 15.2Z"
-                                            fill="#BDBDBD"
-                                        />
-                                        <Path
-                                            d="M9 2L7.17 4H4C2.9 4 2 4.9 2 6V18C2 19.1 2.9 20 4 20H20C21.1 20 22 19.1 22 18V6C22 4.9 21.1 4 20 4H16.83L15 2H9ZM12 17C9.24 17 7 14.76 7 12C7 9.24 9.24 7 12 7C14.76 7 17 9.24 17 12C17 14.76 14.76 17 12 17Z"
-                                            fill="#BDBDBD"
-                                        />
-                                    </G>
-                                    <Defs>
-                                        <ClipPath id="clip0_36_0">
-                                            <Rect
-                                                width="24"
-                                                height="24"
-                                                fill="white"
+                                    <Svg
+                                        width="24"
+                                        height="24"
+                                        viewBox="0 0 24 24"
+                                        fill="none"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                    >
+                                        <G clip-path="url(#clip0_36_0)">
+                                            <Path
+                                                d="M11.9998 15.2C13.7671 15.2 15.1998 13.7673 15.1998 12C15.1998 10.2327 13.7671 8.79999 11.9998 8.79999C10.2325 8.79999 8.7998 10.2327 8.7998 12C8.7998 13.7673 10.2325 15.2 11.9998 15.2Z"
+                                                fill="#BDBDBD"
                                             />
-                                        </ClipPath>
-                                    </Defs>
-                                </Svg>
-                            </TouchableOpacity>
+                                            <Path
+                                                d="M9 2L7.17 4H4C2.9 4 2 4.9 2 6V18C2 19.1 2.9 20 4 20H20C21.1 20 22 19.1 22 18V6C22 4.9 21.1 4 20 4H16.83L15 2H9ZM12 17C9.24 17 7 14.76 7 12C7 9.24 9.24 7 12 7C14.76 7 17 9.24 17 12C17 14.76 14.76 17 12 17Z"
+                                                fill="#BDBDBD"
+                                            />
+                                        </G>
+                                        <Defs>
+                                            <ClipPath id="clip0_36_0">
+                                                <Rect
+                                                    width="24"
+                                                    height="24"
+                                                    fill="white"
+                                                />
+                                            </ClipPath>
+                                        </Defs>
+                                    </Svg>
+                                </TouchableOpacity>
+                            </Camera>
                         </View>
+
                         <TouchableOpacity onPress={uploadPhoto}>
                             <Text
                                 style={{
@@ -129,10 +154,7 @@ const CreatePostsScreen = () => {
                         <View
                             style={{ position: "relative", marginBottom: 32 }}
                         >
-                            <TouchableOpacity
-                                onPress={handleReturnPress}
-                                style={styles.mapButton}
-                            >
+                            <TouchableOpacity style={styles.mapButton}>
                                 <Svg
                                     width="24"
                                     height="24"
@@ -173,7 +195,6 @@ const CreatePostsScreen = () => {
                         </View>
 
                         <TouchableOpacity
-                            onPress={handleReturnPress}
                             style={[
                                 styles.publishButton,
                                 postPhoto
