@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import {
     View,
     Text,
@@ -19,8 +19,8 @@ import ReturnButton from "../../components/ReturnButton";
 
 const CreatePostsScreen = () => {
     const [hasPermission, setHasPermission] = useState(null);
-    const [cameraRef, setCameraRef] = useState(null);
     const [type, setType] = useState(Camera.Constants.Type.back);
+    const cameraRef = useRef(null);
 
     const [postPhoto, setPostPhoto] = useState(null);
     const [photoName, setPhotoName] = useState("");
@@ -29,7 +29,6 @@ const CreatePostsScreen = () => {
         (async () => {
             const { status } = await Camera.requestCameraPermissionsAsync();
             await MediaLibrary.requestPermissionsAsync();
-
             setHasPermission(status === "granted");
         })();
     }, []);
@@ -43,6 +42,21 @@ const CreatePostsScreen = () => {
 
     const handleRemoveImage = () => {
         setPostPhoto(null);
+    };
+
+    const makePhoto = async () => {
+        if (cameraRef.current) {
+            const { uri } = await cameraRef.current.takePictureAsync();
+            await MediaLibrary.createAssetAsync(uri).then(asset => {
+                setNewPost(prevPost => ({
+                    ...prevPost,
+                    photo: {
+                        uri: asset.uri,
+                    },
+                }));
+                setIsPreviewing(true);
+            });
+        }
     };
 
     const uploadPhoto = async () => {
@@ -65,68 +79,68 @@ const CreatePostsScreen = () => {
                 <View style={styles.createPostsScreenContainer}>
                     <View style={{ paddingLeft: 16, paddingRight: 16 }}>
                         <View style={styles.postPhotoContainer}>
-                            <Image
-                                source={{ uri: postPhoto }}
-                                style={{
-                                    width: "100%",
-                                    height: 240,
-                                    borderRadius: 8,
-                                }}
-                            />
-                            <Camera
-                                style={{ flex: 1 }}
-                                type={type}
-                                ref={setCameraRef}
-                            >
-                                <TouchableOpacity
-                                    onPress={async () => {
-                                        if (cameraRef) {
-                                            const { uri } =
-                                                await cameraRef.takePictureAsync();
-                                            await MediaLibrary.createAssetAsync(
-                                                uri
-                                            );
-                                        }
+                            {postPhoto ? (
+                                <Image
+                                    source={{ uri: postPhoto }}
+                                    style={{
+                                        width: "100%",
+                                        // height: 240,
+                                        borderRadius: 8,
                                     }}
-                                    style={[
-                                        styles.addPhotoButton,
-                                        postPhoto
-                                            ? {
-                                                  backgroundColor:
-                                                      "rgba(255, 255, 255, 0.3)",
-                                              }
-                                            : {},
-                                    ]}
+                                />
+                            ) : (
+                                <Camera
+                                    style={{
+                                        borderRadius: 8,
+                                        width: "100%",
+                                        aspectRatio: 4 / 3,
+                                        alignSelf: "center",
+                                    }}
+                                    type={Camera.Constants.Type.back}
+                                    ref={cameraRef}
                                 >
-                                    <Svg
-                                        width="24"
-                                        height="24"
-                                        viewBox="0 0 24 24"
-                                        fill="none"
-                                        xmlns="http://www.w3.org/2000/svg"
+                                    <TouchableOpacity
+                                        onPress={makePhoto}
+                                        style={[
+                                            styles.addPhotoButton,
+                                            postPhoto
+                                                ? {
+                                                      backgroundColor:
+                                                          "rgba(255, 255, 255, 0.3)",
+                                                  }
+                                                : {},
+                                        ]}
                                     >
-                                        <G clip-path="url(#clip0_36_0)">
-                                            <Path
-                                                d="M11.9998 15.2C13.7671 15.2 15.1998 13.7673 15.1998 12C15.1998 10.2327 13.7671 8.79999 11.9998 8.79999C10.2325 8.79999 8.7998 10.2327 8.7998 12C8.7998 13.7673 10.2325 15.2 11.9998 15.2Z"
-                                                fill="#BDBDBD"
-                                            />
-                                            <Path
-                                                d="M9 2L7.17 4H4C2.9 4 2 4.9 2 6V18C2 19.1 2.9 20 4 20H20C21.1 20 22 19.1 22 18V6C22 4.9 21.1 4 20 4H16.83L15 2H9ZM12 17C9.24 17 7 14.76 7 12C7 9.24 9.24 7 12 7C14.76 7 17 9.24 17 12C17 14.76 14.76 17 12 17Z"
-                                                fill="#BDBDBD"
-                                            />
-                                        </G>
-                                        <Defs>
-                                            <ClipPath id="clip0_36_0">
-                                                <Rect
-                                                    width="24"
-                                                    height="24"
-                                                    fill="white"
+                                        <Svg
+                                            width="24"
+                                            height="24"
+                                            viewBox="0 0 24 24"
+                                            fill="none"
+                                            xmlns="http://www.w3.org/2000/svg"
+                                        >
+                                            <G clip-path="url(#clip0_36_0)">
+                                                <Path
+                                                    d="M11.9998 15.2C13.7671 15.2 15.1998 13.7673 15.1998 12C15.1998 10.2327 13.7671 8.79999 11.9998 8.79999C10.2325 8.79999 8.7998 10.2327 8.7998 12C8.7998 13.7673 10.2325 15.2 11.9998 15.2Z"
+                                                    fill="#BDBDBD"
                                                 />
-                                            </ClipPath>
-                                        </Defs>
-                                    </Svg>
-                                </TouchableOpacity>
-                            </Camera>
+                                                <Path
+                                                    d="M9 2L7.17 4H4C2.9 4 2 4.9 2 6V18C2 19.1 2.9 20 4 20H20C21.1 20 22 19.1 22 18V6C22 4.9 21.1 4 20 4H16.83L15 2H9ZM12 17C9.24 17 7 14.76 7 12C7 9.24 9.24 7 12 7C14.76 7 17 9.24 17 12C17 14.76 14.76 17 12 17Z"
+                                                    fill="#BDBDBD"
+                                                />
+                                            </G>
+                                            <Defs>
+                                                <ClipPath id="clip0_36_0">
+                                                    <Rect
+                                                        width="24"
+                                                        height="24"
+                                                        fill="white"
+                                                    />
+                                                </ClipPath>
+                                            </Defs>
+                                        </Svg>
+                                    </TouchableOpacity>
+                                </Camera>
+                            )}
                         </View>
 
                         <TouchableOpacity onPress={uploadPhoto}>
@@ -154,31 +168,33 @@ const CreatePostsScreen = () => {
                         <View
                             style={{ position: "relative", marginBottom: 32 }}
                         >
-                            <TouchableOpacity style={styles.mapButton}>
-                                <Svg
-                                    width="24"
-                                    height="24"
-                                    viewBox="0 0 24 24"
-                                    fill="none"
-                                    xmlns="http://www.w3.org/2000/svg"
-                                >
-                                    <Path
-                                        fill-rule="evenodd"
-                                        clip-rule="evenodd"
-                                        d="M20 10.3636C20 16.0909 12 21 12 21C12 21 4 16.0909 4 10.3636C4 6.29681 7.58172 3 12 3C16.4183 3 20 6.29681 20 10.3636V10.3636Z"
-                                        stroke="#BDBDBD"
-                                        stroke-linecap="round"
-                                        stroke-linejoin="round"
-                                    />
-                                    <Path
-                                        fill-rule="evenodd"
-                                        clip-rule="evenodd"
-                                        d="M12 14C13.6569 14 15 12.6569 15 11C15 9.34315 13.6569 8 12 8C10.3431 8 9 9.34315 9 11C9 12.6569 10.3431 14 12 14Z"
-                                        stroke="#BDBDBD"
-                                        stroke-linecap="round"
-                                        stroke-linejoin="round"
-                                    />
-                                </Svg>
+                            <TouchableOpacity>
+                                <View style={styles.mapButton}>
+                                    <Svg
+                                        width="24"
+                                        height="24"
+                                        viewBox="0 0 24 24"
+                                        fill="none"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                    >
+                                        <Path
+                                            fill-rule="evenodd"
+                                            clip-rule="evenodd"
+                                            d="M20 10.3636C20 16.0909 12 21 12 21C12 21 4 16.0909 4 10.3636C4 6.29681 7.58172 3 12 3C16.4183 3 20 6.29681 20 10.3636V10.3636Z"
+                                            stroke="#BDBDBD"
+                                            stroke-linecap="round"
+                                            stroke-linejoin="round"
+                                        />
+                                        <Path
+                                            fill-rule="evenodd"
+                                            clip-rule="evenodd"
+                                            d="M12 14C13.6569 14 15 12.6569 15 11C15 9.34315 13.6569 8 12 8C10.3431 8 9 9.34315 9 11C9 12.6569 10.3431 14 12 14Z"
+                                            stroke="#BDBDBD"
+                                            stroke-linecap="round"
+                                            stroke-linejoin="round"
+                                        />
+                                    </Svg>
+                                </View>
                             </TouchableOpacity>
 
                             <TextInput

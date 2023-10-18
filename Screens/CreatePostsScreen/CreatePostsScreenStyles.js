@@ -21,7 +21,6 @@ export const styles = StyleSheet.create({
         borderStyle: "solid",
         borderColor: "#E8E8E8",
         borderBottomWidth: 1,
-        // backgroundColor: "#000000"
     },
     createPostsHeader: {
         marginLeft: "auto",
@@ -40,7 +39,7 @@ export const styles = StyleSheet.create({
         marginRight: "auto",
         marginBottom: 8,
         width: "100%",
-        height: 240,
+        height: 253,
         backgroundColor: "#F6F6F6",
         borderRadius: 8,
         borderStyle: "solid",
