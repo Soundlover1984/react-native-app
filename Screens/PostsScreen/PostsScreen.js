@@ -1,9 +1,9 @@
-import { View, Text } from "react-native";
+import { View, Text, ScrollView } from "react-native";
 
 import { styles } from "./PostsScreenStyles";
-import LogoutButton from "../../components/LogoutButton";
-import AppControls from "../../components/AppControls";
 import AuthenticatedUserInfo from "../../components/AuthenticatedUserInfo";
+import PostComponent from "../../components/PostComponent/PostComponent";
+import { posts } from "../../posts";
 
 const PostsScreen = () => {
     const handleLogoutPress = () => {
@@ -18,6 +18,25 @@ const PostsScreen = () => {
             </View> */}
             <AuthenticatedUserInfo />
             {/* <AppControls /> */}
+            <ScrollView
+                style={{ margin: 0, padding: 16 }}
+                showsVerticalScrollIndicator={false}
+            >
+                {posts.map(
+                    ({ img, description, likes, coments, locationName }) => {
+                        return (
+                            <PostComponent
+                                key={description}
+                                image={img}
+                                description={description}
+                                likes={likes}
+                                comments={coments}
+                                locationName={locationName}
+                            />
+                        );
+                    }
+                )}
+            </ScrollView>
         </View>
     );
 };

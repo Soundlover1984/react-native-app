@@ -9,6 +9,7 @@ import RegistrationImageAddButton from "../../components/RegistrationImageAddBut
 import RegistrationImageRemoveButton from "../../components/RegistrationImageRemoveButton";
 import PostComponent from "../../components/PostComponent/PostComponent";
 import LogoutButton from "../../components/LogoutButton";
+import { posts } from "../../posts";
 
 const ProfileScreen = () => {
     const [login, setLogin] = useState("Natali Romanova");
@@ -29,38 +30,6 @@ const ProfileScreen = () => {
 
         if (!result.canceled) setUserAavatar(result.assets[0].uri);
     };
-
-    const posts = [
-        {
-            img: "https://izki.ua/image/cache/catalog/statti/maxresdefault-335x200w.jpg",
-            description: "123",
-            coments: 0,
-            likes: 50,
-            location: "Ukraine",
-        },
-        {
-            img: "https://img.tsn.ua/cached/292/tsn-8c5f6b23d1211bb14030cc3abd4583f7/thumbs/x/bf/74/1d750cdae19c5075e0123ec455ee74bf.jpeg",
-            description: "456",
-            coments: 84,
-            likes: 58,
-            location: "Ukraine",
-        },
-        {
-            img: "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/%D0%93%D1%80%D0%B0%D0%BC%D0%BF%D0%B8%D0%B0%D0%BD%D1%81%D0%BA%D0%B8%D0%B5_%D0%B3%D0%BE%D1%80%D1%8B.jpg/280px-%D0%93%D1%80%D0%B0%D0%BC%D0%BF%D0%B8%D0%B0%D0%BD%D1%81%D0%BA%D0%B8%D0%B5_%D0%B3%D0%BE%D1%80%D1%8B.jpg",
-            description: "789",
-            coments: 0,
-            likes: 56,
-            location: "Ukraine",
-        },
-        {
-            img: "https://planetofhotels.com/guide/sites/default/files/styles/big_gallery_image/public/text_gallery/gori.jpg",
-            description: "012",
-            coments: 3,
-            likes: 76,
-            location: "Ukraine",
-        },
-    ];
-    const post = posts[1];
 
     return (
         <ImageBackground
@@ -102,15 +71,14 @@ const ProfileScreen = () => {
                     style={{ margin: 0, padding: 0 }}
                     showsVerticalScrollIndicator={false}
                 >
-                    {/* <PostComponent
-                    image={post.img}
-                    description={post.description}
-                    s={post.coments}
-                    likes={post.likes}
-                    location={post.location}
-                /> */}
                     {posts.map(
-                        ({ img, description, likes, coments, location }) => {
+                        ({
+                            img,
+                            description,
+                            likes,
+                            coments,
+                            locationName,
+                        }) => {
                             return (
                                 <PostComponent
                                     key={description}
@@ -118,7 +86,7 @@ const ProfileScreen = () => {
                                     description={description}
                                     likes={likes}
                                     comments={coments}
-                                    location={location}
+                                    locationName={locationName}
                                 />
                             );
                         }

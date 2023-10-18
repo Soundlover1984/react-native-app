@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
     View,
     Text,
@@ -8,30 +8,52 @@ import {
     KeyboardAvoidingView,
     TouchableWithoutFeedback,
     Keyboard,
+    Alert,
 } from "react-native";
 import { Camera } from "expo-camera";
-import * as MediaLibrary from "expo-media-library";
 import { Svg, Path, Rect, G, Defs, ClipPath } from "react-native-svg";
 import * as ImagePicker from "expo-image-picker";
+import * as Location from "expo-location";
 
+import { posts } from "../../posts";
 import { styles } from "./CreatePostsScreenStyles";
-import ReturnButton from "../../components/ReturnButton";
 
 const CreatePostsScreen = () => {
-    const [hasPermission, setHasPermission] = useState(null);
-    const [type, setType] = useState(Camera.Constants.Type.back);
-    const cameraRef = useRef(null);
-
     const [postPhoto, setPostPhoto] = useState(null);
     const [photoName, setPhotoName] = useState("");
+    const [photoLocationName, setPhotoLocationName] = useState("");
+    const [hasPermission, setHasPermission] = useState(null);
+    const [currentGeoLocation, setCurrentGeoLocation] = useState(null);
+    const cameraRef = useRef(null);
+
+    useEffect(() => {
+        (async () => {
+            let { status } = await Location.requestForegroundPermissionsAsync();
+            if (status !== "granted") {
+                Alert.alert("Access error");
+                return;
+            }
+            let currentLocation = await Location.getCurrentPositionAsync({});
+            setCurrentGeoLocation({
+                latitude: currentLocation.coords.latitude,
+                longitude: currentLocation.coords.longitude,
+            });
+        })();
+    }, []);
 
     useEffect(() => {
         (async () => {
             const { status } = await Camera.requestCameraPermissionsAsync();
-            await MediaLibrary.requestPermissionsAsync();
             setHasPermission(status === "granted");
         })();
     }, []);
+
+    const makePhoto = async () => {
+        if (cameraRef.current) {
+            const { uri } = await cameraRef.current.takePictureAsync();
+            setPostPhoto(uri);
+        }
+    };
 
     if (hasPermission === null) {
         return <View />;
@@ -40,23 +62,14 @@ const CreatePostsScreen = () => {
         return <Text>No access to camera</Text>;
     }
 
-    const handleRemoveImage = () => {
-        setPostPhoto(null);
+    const handleReturnPress = () => {
+        console.log("Logout");
     };
 
-    const makePhoto = async () => {
-        if (cameraRef.current) {
-            const { uri } = await cameraRef.current.takePictureAsync();
-            await MediaLibrary.createAssetAsync(uri).then(asset => {
-                setNewPost(prevPost => ({
-                    ...prevPost,
-                    photo: {
-                        uri: asset.uri,
-                    },
-                }));
-                setIsPreviewing(true);
-            });
-        }
+    const clearData = () => {
+        setPostPhoto(null);
+        setPhotoName("");
+        setPhotoLocationName("");
     };
 
     const uploadPhoto = async () => {
@@ -70,10 +83,22 @@ const CreatePostsScreen = () => {
         if (!result.canceled) setPostPhoto(result.assets[0].uri);
     };
 
+    const handleSubmit = () => {
+        const data = {
+            img: postPhoto,
+            description: photoName,
+            coments: 1,
+            likes: 0,
+            locationName: photoLocationName,
+            geoLocation: currentGeoLocation,
+        };
+        posts.unshift(data);
+        console.log(posts[0]);
+    };
+
     return (
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
             <KeyboardAvoidingView
-                style={{}}
                 behavior={Platform.OS == "ios" ? "padding" : "height"}
             >
                 <View style={styles.createPostsScreenContainer}>
@@ -84,7 +109,7 @@ const CreatePostsScreen = () => {
                                     source={{ uri: postPhoto }}
                                     style={{
                                         width: "100%",
-                                        // height: 240,
+                                        height: 240,
                                         borderRadius: 8,
                                     }}
                                 />
@@ -93,6 +118,7 @@ const CreatePostsScreen = () => {
                                     style={{
                                         borderRadius: 8,
                                         width: "100%",
+                                        height: 240,
                                         aspectRatio: 4 / 3,
                                         alignSelf: "center",
                                     }}
@@ -163,38 +189,39 @@ const CreatePostsScreen = () => {
                             type={"text"}
                             name={"photoName"}
                             value={photoName}
-                            onChange={setPhotoName}
+                            onChangeText={setPhotoName}
                         />
                         <View
                             style={{ position: "relative", marginBottom: 32 }}
                         >
-                            <TouchableOpacity>
-                                <View style={styles.mapButton}>
-                                    <Svg
-                                        width="24"
-                                        height="24"
-                                        viewBox="0 0 24 24"
-                                        fill="none"
-                                        xmlns="http://www.w3.org/2000/svg"
-                                    >
-                                        <Path
-                                            fill-rule="evenodd"
-                                            clip-rule="evenodd"
-                                            d="M20 10.3636C20 16.0909 12 21 12 21C12 21 4 16.0909 4 10.3636C4 6.29681 7.58172 3 12 3C16.4183 3 20 6.29681 20 10.3636V10.3636Z"
-                                            stroke="#BDBDBD"
-                                            stroke-linecap="round"
-                                            stroke-linejoin="round"
-                                        />
-                                        <Path
-                                            fill-rule="evenodd"
-                                            clip-rule="evenodd"
-                                            d="M12 14C13.6569 14 15 12.6569 15 11C15 9.34315 13.6569 8 12 8C10.3431 8 9 9.34315 9 11C9 12.6569 10.3431 14 12 14Z"
-                                            stroke="#BDBDBD"
-                                            stroke-linecap="round"
-                                            stroke-linejoin="round"
-                                        />
-                                    </Svg>
-                                </View>
+                            <TouchableOpacity
+                                onPress={handleReturnPress}
+                                style={styles.mapButton}
+                            >
+                                <Svg
+                                    width="24"
+                                    height="24"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                >
+                                    <Path
+                                        fill-rule="evenodd"
+                                        clip-rule="evenodd"
+                                        d="M20 10.3636C20 16.0909 12 21 12 21C12 21 4 16.0909 4 10.3636C4 6.29681 7.58172 3 12 3C16.4183 3 20 6.29681 20 10.3636V10.3636Z"
+                                        stroke="#BDBDBD"
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                    />
+                                    <Path
+                                        fill-rule="evenodd"
+                                        clip-rule="evenodd"
+                                        d="M12 14C13.6569 14 15 12.6569 15 11C15 9.34315 13.6569 8 12 8C10.3431 8 9 9.34315 9 11C9 12.6569 10.3431 14 12 14Z"
+                                        stroke="#BDBDBD"
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                    />
+                                </Svg>
                             </TouchableOpacity>
 
                             <TextInput
@@ -204,13 +231,14 @@ const CreatePostsScreen = () => {
                                 ]}
                                 placeholder="Місцевість..."
                                 type={"text"}
-                                name={"photoName"}
-                                value={photoName}
-                                onChange={setPhotoName}
+                                name={"photoLocation"}
+                                value={photoLocationName}
+                                onChangeText={setPhotoLocationName}
                             />
                         </View>
 
                         <TouchableOpacity
+                            onPress={handleSubmit}
                             style={[
                                 styles.publishButton,
                                 postPhoto
@@ -248,7 +276,7 @@ const CreatePostsScreen = () => {
                     </View>
 
                     <TouchableOpacity
-                        onPress={handleRemoveImage}
+                        onPress={clearData}
                         style={styles.removePostButton}
                     >
                         <Svg

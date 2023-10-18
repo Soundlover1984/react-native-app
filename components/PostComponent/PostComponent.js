@@ -3,7 +3,13 @@ import { Svg, Path } from "react-native-svg";
 
 import { styles } from "./PostComponentStyles";
 
-const PostComponent = ({ image, description, comments, likes, location }) => {
+const PostComponent = ({
+    image,
+    description,
+    comments,
+    likes,
+    locationName,
+}) => {
     return (
         <View style={{ position: "relative", marginBottom: 32 }}>
             <Image
@@ -103,7 +109,7 @@ const PostComponent = ({ image, description, comments, likes, location }) => {
                             stroke-linejoin="round"
                         />
                     </Svg>
-                    <Text>{location}</Text>
+                    <Text>{locationName}</Text>
                 </View>
             </View>
         </View>

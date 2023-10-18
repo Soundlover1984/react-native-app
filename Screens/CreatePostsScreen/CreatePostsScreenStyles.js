@@ -39,7 +39,6 @@ export const styles = StyleSheet.create({
         marginRight: "auto",
         marginBottom: 8,
         width: "100%",
-        height: 253,
         backgroundColor: "#F6F6F6",
         borderRadius: 8,
         borderStyle: "solid",
@@ -48,6 +47,8 @@ export const styles = StyleSheet.create({
     },
     addPhotoButton: {
         position: "absolute",
+        top: "40%",
+        left: "40%",
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
