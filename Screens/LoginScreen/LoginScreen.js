@@ -121,7 +121,7 @@ const LoginScreen = () => {
                             Немає акаунту?{" "}
                         </Text>
                         <TouchableOpacity
-                            onPress={() => navigation.navigate("Registration")}
+                            onPress={() => navigation.navigate("RegistrationScreen")}
                         >
                             <Text
                                 style={{

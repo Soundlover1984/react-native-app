@@ -1,27 +1,30 @@
 import React, { useState } from "react";
-import { useRoute } from "@react-navigation/native";
+import { useRoute, useNavigation } from "@react-navigation/native";
 import { View, Text, Image, ScrollView } from "react-native";
-// import { nanoid } from "nanoid";
 
 import { styles } from "./CommentsScreenStyles";
 import ReturnButton from "../../components/ReturnButton";
-import postPhoto from "../../assets/images/fire.png";
-// import userPhoto from "../../assets/images/User.jpg";
 import commentatorPhoto from "../../assets/images/comentator.png";
+import userPhoto from "../../assets/images/User.jpg";
 import CommentComponent from "../../components/CommentComponent";
 import CommentInput from "../../components/CommentInput/CommentInput";
 
 const CommentsScreen = () => {
-    const [currentPostPhoto, setCurrentPostPhoto] = useState(postPhoto);
+    const navigation = useNavigation();
     const {
-        params: { comments },
+        params: {
+            params: { comments, image },
+        },
     } = useRoute();
 
     const handleReturnPress = () => {
-        console.log("Logout");
+        navigation.navigate("Home", {
+            screen: "PostScreen",
+            params: {
+                user: "123",
+            },
+        });
     };
-
-    console.log(comments);
 
     return (
         <View style={styles.commentsScreenContainer}>
@@ -38,7 +41,7 @@ const CommentsScreen = () => {
             >
                 <View style={styles.postPhotoContainer}>
                     <Image
-                        source={currentPostPhoto}
+                        source={{ uri: image }}
                         style={{
                             width: "100%",
                             height: 240,
@@ -51,17 +54,21 @@ const CommentsScreen = () => {
                 style={{ margin: 0, padding: 0 }}
                 showsVerticalScrollIndicator={false}
             >
-                {/* {comments.map(({ author, text, date }) => {
+                {comments.map(({ author, text, date }) => {
                     return (
                         <CommentComponent
                             key={text}
                             author={author}
                             text={text}
                             date={date}
-                            userIcon={commentatorPhoto}
+                            userIcon={
+                                author === "owner"
+                                    ? userPhoto
+                                    : commentatorPhoto
+                            }
                         />
                     );
-                })} */}
+                })}
             </ScrollView>
             <CommentInput />
         </View>

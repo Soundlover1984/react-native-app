@@ -29,7 +29,7 @@ const App = () => {
     return (
         <View style={styles.container}>
             <NavigationContainer>
-                <MainStack.Navigator initialRouteName="Login">
+                <MainStack.Navigator initialRouteName="LoginScreen">
                     <MainStack.Screen
                         options={{ headerShown: false }}
                         name="Home"
@@ -37,17 +37,17 @@ const App = () => {
                     />
                     <MainStack.Screen
                         options={{ headerShown: false }}
-                        name="Registration"
+                        name="RegistrationScreen"
                         component={RegistrationScreen}
                     />
                     <MainStack.Screen
                         options={{ headerShown: false }}
-                        name="Login"
+                        name="LoginScreen"
                         component={LoginScreen}
                     />
                     <MainStack.Screen
                         options={{ headerShown: false }}
-                        name="Posts"
+                        name="PostsScreen"
                         component={PostsScreen}
                     />
                     {/* <MainStack.Screen
@@ -57,7 +57,7 @@ const App = () => {
                     /> */}
                     <MainStack.Screen
                         options={{ headerShown: false }}
-                        name="Comments"
+                        name="CommentsScreen"
                         component={CommentsScreen}
                     />
                     {/* <MainStack.Screen
@@ -65,7 +65,7 @@ const App = () => {
                         name="Profile"
                         component={ProfileScreen}
                     /> */}
-                    <MainStack.Screen name="Map" component={MapScreen} />
+                    <MainStack.Screen name="MapScreen" component={MapScreen} />
                 </MainStack.Navigator>
             </NavigationContainer>
         </View>

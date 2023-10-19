@@ -6,18 +6,10 @@ import PostComponent from "../../components/PostComponent/PostComponent";
 import { posts } from "../../posts";
 
 const PostsScreen = () => {
-    const handleLogoutPress = () => {
-        console.log("Logout");
-    };
-
+   
     return (
         <View style={styles.postsScreenContainer}>
-            {/* <View style={styles.postsScreenHeaderContainer}>
-                <Text style={styles.postsScreenHeader}>Публікації</Text>
-                <LogoutButton onPress={handleLogoutPress}></LogoutButton>
-            </View> */}
             <AuthenticatedUserInfo />
-            {/* <AppControls /> */}
             <ScrollView
                 style={{ margin: 0, padding: 16 }}
                 showsVerticalScrollIndicator={false}

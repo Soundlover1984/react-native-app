@@ -40,7 +40,7 @@ const ProfileScreen = () => {
             <View style={styles.profileContainer}>
                 <View style={styles.profileLogoutButton}>
                     <LogoutButton
-                        onPress={() => navigation.navigate("Login")}
+                        onPress={() => navigation.navigate("LoginScreen")}
                     />
                 </View>
 

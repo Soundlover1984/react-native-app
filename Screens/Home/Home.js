@@ -29,7 +29,9 @@ const Home = () => {
                     headerRight: () => (
                         <View style={{ marginRight: 16 }}>
                             <LogoutButton
-                                onPress={() => navigation.navigate("Login")}
+                                onPress={() =>
+                                    navigation.navigate("LoginScreen")
+                                }
                             />
                         </View>
                     ),
