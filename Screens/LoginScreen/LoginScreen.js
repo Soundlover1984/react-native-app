@@ -90,7 +90,7 @@ const LoginScreen = () => {
                     <TouchableOpacity
                         onPress={handleSubmitButtonPress}
                         style={styles.loginFormSubmitButton}
-                        title="Зареєструватися"
+                        title="Увійти"
                     >
                         <Text
                             style={{

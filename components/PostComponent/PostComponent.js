@@ -12,6 +12,7 @@ const PostComponent = ({
     locationName,
 }) => {
     const navigation = useNavigation();
+    console.log(comments);
 
     return (
         <View style={{ position: "relative", marginBottom: 32 }}>
@@ -28,8 +29,7 @@ const PostComponent = ({
             <View style={styles.componentsContainer}>
                 <View style={{ display: "flex", flexDirection: "row", gap: 6 }}>
                     <TouchableOpacity
-                        onPress={
-                            // () => console.log(comments)
+                        onPress={() =>
                             navigation.navigate("Comments", {
                                 params: {
                                     comments: comments,

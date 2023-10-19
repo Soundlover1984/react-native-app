@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useRoute } from "@react-navigation/native";
 import { View, Text, Image, ScrollView } from "react-native";
 // import { nanoid } from "nanoid";
 
@@ -10,12 +11,17 @@ import commentatorPhoto from "../../assets/images/comentator.png";
 import CommentComponent from "../../components/CommentComponent";
 import CommentInput from "../../components/CommentInput/CommentInput";
 
-const CommentsScreen = ({ comments }) => {
+const CommentsScreen = () => {
     const [currentPostPhoto, setCurrentPostPhoto] = useState(postPhoto);
+    const {
+        params: { comments },
+    } = useRoute();
 
     const handleReturnPress = () => {
         console.log("Logout");
     };
+
+    console.log(comments);
 
     return (
         <View style={styles.commentsScreenContainer}>
@@ -45,7 +51,7 @@ const CommentsScreen = ({ comments }) => {
                 style={{ margin: 0, padding: 0 }}
                 showsVerticalScrollIndicator={false}
             >
-                {comments.map(({ author, text, date }) => {
+                {/* {comments.map(({ author, text, date }) => {
                     return (
                         <CommentComponent
                             key={text}
@@ -55,7 +61,7 @@ const CommentsScreen = ({ comments }) => {
                             userIcon={commentatorPhoto}
                         />
                     );
-                })}
+                })} */}
             </ScrollView>
             <CommentInput />
         </View>
