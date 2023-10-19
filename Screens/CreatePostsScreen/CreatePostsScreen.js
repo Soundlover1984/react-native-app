@@ -10,6 +10,7 @@ import {
     Keyboard,
     Alert,
 } from "react-native";
+import { useNavigation } from "@react-navigation/native";
 import { Camera } from "expo-camera";
 import { Svg, Path, Rect, G, Defs, ClipPath } from "react-native-svg";
 import * as ImagePicker from "expo-image-picker";
@@ -19,6 +20,7 @@ import { posts } from "../../posts";
 import { styles } from "./CreatePostsScreenStyles";
 
 const CreatePostsScreen = () => {
+    const navigation = useNavigation();
     const [postPhoto, setPostPhoto] = useState(null);
     const [photoName, setPhotoName] = useState("");
     const [photoLocationName, setPhotoLocationName] = useState("");
@@ -83,6 +85,10 @@ const CreatePostsScreen = () => {
         if (!result.canceled) setPostPhoto(result.assets[0].uri);
     };
 
+    const handleNavigateToPosts = () => {
+        navigation.navigate("PostsScreen");
+    };
+
     const handleSubmit = () => {
         const data = {
             img: postPhoto,
@@ -93,7 +99,8 @@ const CreatePostsScreen = () => {
             geoLocation: currentGeoLocation,
         };
         posts.unshift(data);
-        console.log(posts[0]);
+        clearData();
+        handleNavigateToPosts();
     };
 
     return (

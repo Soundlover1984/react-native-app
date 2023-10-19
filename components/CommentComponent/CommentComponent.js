@@ -2,19 +2,19 @@ import { View, Text, Image } from "react-native";
 
 import { styles } from "./CommentComponentStyles";
 
-const CommentComponent = ({ user, text, date, userIcon }) => {
+const CommentComponent = ({ author, text, date, userIcon }) => {
     return (
         <View
             style={[
                 styles.commentContainer,
-                user === "owner" ? { flexDirection: "row-reverse" } : {},
+                author === "owner" ? { flexDirection: "row-reverse" } : {},
             ]}
         >
             <Image source={userIcon} style={styles.userIcon} />
             <View
                 style={[
                     styles.comment,
-                    user === "owner"
+                    author === "owner"
                         ? { borderTopEndRadius: 0, borderTopLeftRadius: 6 }
                         : {},
                 ]}
@@ -23,7 +23,7 @@ const CommentComponent = ({ user, text, date, userIcon }) => {
                 <Text
                     style={[
                         styles.date,
-                        user === "owner"
+                        author === "owner"
                             ? { marginRight: "auto", marginLeft: 0 }
                             : {},
                     ]}

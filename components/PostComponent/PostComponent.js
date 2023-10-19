@@ -1,4 +1,5 @@
 import { View, Image, Text, TouchableOpacity } from "react-native";
+import { useNavigation } from "@react-navigation/native";
 import { Svg, Path } from "react-native-svg";
 
 import { styles } from "./PostComponentStyles";
@@ -10,6 +11,8 @@ const PostComponent = ({
     likes,
     locationName,
 }) => {
+    const navigation = useNavigation();
+
     return (
         <View style={{ position: "relative", marginBottom: 32 }}>
             <Image
@@ -24,41 +27,51 @@ const PostComponent = ({
             <Text style={{ marginBottom: 8 }}>{description}</Text>
             <View style={styles.componentsContainer}>
                 <View style={{ display: "flex", flexDirection: "row", gap: 6 }}>
-                    {comments === 0 ? (
-                        <Svg
-                            width="24"
-                            height="24"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            xmlns="http://www.w3.org/2000/svg"
-                        >
-                            <Path
-                                fill-rule="evenodd"
-                                clip-rule="evenodd"
-                                d="M3 11.5C2.99656 12.8199 3.30493 14.1219 3.9 15.3C5.33904 18.1793 8.28109 19.9988 11.5 20C12.8199 20.0034 14.1219 19.6951 15.3 19.1L21 21L19.1 15.3C19.6951 14.1219 20.0034 12.8199 20 11.5C19.9988 8.28109 18.1793 5.33904 15.3 3.9C14.1219 3.30493 12.8199 2.99656 11.5 3H11C6.68419 3.2381 3.2381 6.68419 3 11V11.5V11.5Z"
-                                stroke="#BDBDBD"
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                            />
-                        </Svg>
-                    ) : (
-                        <Svg
-                            width="24"
-                            height="24"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            xmlns="http://www.w3.org/2000/svg"
-                        >
-                            <Path
-                                fill-rule="evenodd"
-                                clip-rule="evenodd"
-                                d="M3 11.5C2.99656 12.8199 3.30493 14.1219 3.9 15.3C5.33904 18.1793 8.28109 19.9988 11.5 20C12.8199 20.0034 14.1219 19.6951 15.3 19.1L21 21L19.1 15.3C19.6951 14.1219 20.0034 12.8199 20 11.5C19.9988 8.28109 18.1793 5.33904 15.3 3.9C14.1219 3.30493 12.8199 2.99656 11.5 3H11C6.68419 3.2381 3.2381 6.68419 3 11V11.5Z"
-                                fill="#FF6C00"
-                            />
-                        </Svg>
-                    )}
-
-                    <Text>{comments}</Text>
+                    <TouchableOpacity
+                        onPress={
+                            // () => console.log(comments)
+                            navigation.navigate("Comments", {
+                                params: {
+                                    comments: comments,
+                                },
+                            })
+                        }
+                    >
+                        {comments.length === 0 ? (
+                            <Svg
+                                width="24"
+                                height="24"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                xmlns="http://www.w3.org/2000/svg"
+                            >
+                                <Path
+                                    fill-rule="evenodd"
+                                    clip-rule="evenodd"
+                                    d="M3 11.5C2.99656 12.8199 3.30493 14.1219 3.9 15.3C5.33904 18.1793 8.28109 19.9988 11.5 20C12.8199 20.0034 14.1219 19.6951 15.3 19.1L21 21L19.1 15.3C19.6951 14.1219 20.0034 12.8199 20 11.5C19.9988 8.28109 18.1793 5.33904 15.3 3.9C14.1219 3.30493 12.8199 2.99656 11.5 3H11C6.68419 3.2381 3.2381 6.68419 3 11V11.5V11.5Z"
+                                    stroke="#BDBDBD"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                />
+                            </Svg>
+                        ) : (
+                            <Svg
+                                width="24"
+                                height="24"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                xmlns="http://www.w3.org/2000/svg"
+                            >
+                                <Path
+                                    fill-rule="evenodd"
+                                    clip-rule="evenodd"
+                                    d="M3 11.5C2.99656 12.8199 3.30493 14.1219 3.9 15.3C5.33904 18.1793 8.28109 19.9988 11.5 20C12.8199 20.0034 14.1219 19.6951 15.3 19.1L21 21L19.1 15.3C19.6951 14.1219 20.0034 12.8199 20 11.5C19.9988 8.28109 18.1793 5.33904 15.3 3.9C14.1219 3.30493 12.8199 2.99656 11.5 3H11C6.68419 3.2381 3.2381 6.68419 3 11V11.5Z"
+                                    fill="#FF6C00"
+                                />
+                            </Svg>
+                        )}
+                    </TouchableOpacity>
+                    <Text>{comments.length}</Text>
                 </View>
                 <View style={{ display: "flex", flexDirection: "row", gap: 6 }}>
                     <Svg

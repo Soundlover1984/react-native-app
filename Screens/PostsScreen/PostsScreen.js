@@ -23,14 +23,14 @@ const PostsScreen = () => {
                 showsVerticalScrollIndicator={false}
             >
                 {posts.map(
-                    ({ img, description, likes, coments, locationName }) => {
+                    ({ img, description, likes, comments, locationName }) => {
                         return (
                             <PostComponent
                                 key={description}
                                 image={img}
                                 description={description}
                                 likes={likes}
-                                comments={coments}
+                                comments={comments}
                                 locationName={locationName}
                             />
                         );
