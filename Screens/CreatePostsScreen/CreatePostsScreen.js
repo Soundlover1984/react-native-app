@@ -25,21 +25,22 @@ const CreatePostsScreen = () => {
     const [photoName, setPhotoName] = useState("");
     const [photoLocationName, setPhotoLocationName] = useState("");
     const [hasPermission, setHasPermission] = useState(null);
-    const [currentGeoLocation, setCurrentGeoLocation] = useState(null);
+    const [currentGeoLocation, setCurrentGeoLocation] = useState({});
     const cameraRef = useRef(null);
 
     useEffect(() => {
         (async () => {
             let { status } = await Location.requestForegroundPermissionsAsync();
             if (status !== "granted") {
-                Alert.alert("Access error");
-                return;
+                console.log("Permission to access location was denied");
             }
-            let currentLocation = await Location.getCurrentPositionAsync({});
-            setCurrentGeoLocation({
-                latitude: currentLocation.coords.latitude,
-                longitude: currentLocation.coords.longitude,
-            });
+
+            let location = await Location.getCurrentPositionAsync({});
+            const coords = {
+                latitude: location.coords.latitude,
+                longitude: location.coords.longitude,
+            };
+            setCurrentGeoLocation(coords);
         })();
     }, []);
 
@@ -93,7 +94,7 @@ const CreatePostsScreen = () => {
         const data = {
             img: postPhoto,
             description: photoName,
-            coments: 1,
+            comments: [],
             likes: 0,
             locationName: photoLocationName,
             geoLocation: currentGeoLocation,

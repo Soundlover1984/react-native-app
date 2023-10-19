@@ -76,8 +76,9 @@ const ProfileScreen = () => {
                             img,
                             description,
                             likes,
-                            coments,
+                            comments,
                             locationName,
+                            geoLocation,
                         }) => {
                             return (
                                 <PostComponent
@@ -85,8 +86,9 @@ const ProfileScreen = () => {
                                     image={img}
                                     description={description}
                                     likes={likes}
-                                    comments={coments}
+                                    comments={comments}
                                     locationName={locationName}
+                                    geoLocation={geoLocation}
                                 />
                             );
                         }

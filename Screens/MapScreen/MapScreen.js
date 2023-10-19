@@ -1,12 +1,19 @@
 import React, { useState, useEffect } from "react";
-import { View, Dimensions } from "react-native";
+import { View } from "react-native";
+import { useRoute } from "@react-navigation/native";
 import MapView, { Marker } from "react-native-maps";
 import * as Location from "expo-location";
 
 import { styles } from "./MapScreenStyles";
 
 const MapScreen = () => {
-    const [photoLocation, setPhotoLocation] = useState(null);
+    
+     const {
+         params: {
+             params: { geoLocation },
+         },
+    } = useRoute();
+    const [photoLocation, setPhotoLocation] = useState(geoLocation ? geoLocation : null);
 
     useEffect(() => {
         (async () => {
