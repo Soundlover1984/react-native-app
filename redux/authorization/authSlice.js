@@ -5,7 +5,6 @@ import { registration, login } from "./authOperations";
 const initialState = {
     userId: "",
     userName: "",
-    email: "",
     userPhoto: "",
     isAuthorized: false,
     error: null,

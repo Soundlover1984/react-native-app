@@ -50,7 +50,7 @@ const RegistrationScreen = () => {
                 userName: login,
                 email: email,
                 password: password,
-                userPhoto: userAvatar,
+                userPhoto: String(userAvatar),
             })
         ).then(result => {
             result.type === "authorization/registration/fulfilled"

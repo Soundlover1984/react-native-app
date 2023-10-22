@@ -37,9 +37,7 @@ const store = configureStore({
                     PERSIST,
                     PURGE,
                     REGISTER,
-                    "authorization/registration/fulfilled",
                 ],
-                ignoredPaths: ["firebase", "firestore"],
             },
         }),
 });
