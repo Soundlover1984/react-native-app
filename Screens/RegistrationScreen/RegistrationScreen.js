@@ -20,7 +20,11 @@ import RegistrationImageAddButton from "../../components/RegistrationImageAddBut
 import RegistrationImageRemoveButton from "../../components/RegistrationImageRemoveButton";
 import InputComponent from "../../components/InputComponent";
 import { registration } from "../../redux/authorization/authOperations";
-import { selectIsAuthorized } from "../../redux/authorization/authSelectors";
+import {
+    selectIsAuthorized,
+    selectUserPhoto,
+    selectUserId,
+} from "../../redux/authorization/authSelectors";
 
 const RegistrationScreen = () => {
     const dispatch = useDispatch();
@@ -31,6 +35,8 @@ const RegistrationScreen = () => {
     const [showPassword, setShowPassword] = useState(false);
     const [userAvatar, setUserAavatar] = useState(null);
     const isAutorized = useSelector(selectIsAuthorized);
+    const userPhoto = useSelector(selectUserPhoto);
+    const useId = useSelector(selectUserId);
 
     const togglePasswordVisibility = () => {
         setShowPassword(!showPassword);

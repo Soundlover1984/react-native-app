@@ -1,14 +1,16 @@
-
 import { View, Text, Image } from "react-native";
+import { useSelector } from "react-redux";
 
 import { styles } from "./AuthenticatedUserInfoStyles";
+import { selectUserPhoto } from "../../redux/authorization/authSelectors";
 
-const AuthenticatedUserInfo = (avatar) => {
+const AuthenticatedUserInfo = () => {
+    const userPhoto = useSelector(selectUserPhoto);
     return (
         <View style={styles.userContainer}>
             <Image
                 // source={require("../../assets/images/User.jpg")}
-                source={avatar}
+                source={{ uri: userPhoto }}
                 style={{ width: 60, height: 60, borderRadius: 16 }}
             />
             <View>
@@ -23,4 +25,5 @@ const AuthenticatedUserInfo = (avatar) => {
     );
 };
 
-export default AuthenticatedUserInfo;
+export default AuthenticatedUserInfo
+
