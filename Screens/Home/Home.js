@@ -1,8 +1,8 @@
 import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Text, View } from "react-native";
-import { useNavigation, useRoute } from "@react-navigation/native";
-import { useDispatch, useSelector } from "react-redux";
+import { useNavigation } from "@react-navigation/native";
+import { useDispatch } from "react-redux";
 
 import CreatePostsScreen from "../CreatePostsScreen";
 import PostsScreen from "../PostsScreen";
@@ -16,16 +16,11 @@ import {
     ProfileIcon,
 } from "../../components/SvgIcons/SvgIcons";
 import { logout } from "../../redux/authorization/authOperations";
-import { selectUserPhoto } from "../../redux/authorization/authSelectors";
 
 const AppTabs = createBottomTabNavigator();
 
 const Home = () => {
-    // const userPhoto = useSelector(selectUserPhoto);
-
     const navigation = useNavigation();
-    // const route = useRoute();
-    // console.log(route);
     const dispatch = useDispatch();
 
     return (
@@ -33,7 +28,6 @@ const Home = () => {
             <AppTabs.Screen
                 name="PostsScreen"
                 component={PostsScreen}
-                // initialParams={{ userPhoto }}
                 options={{
                     headerTitle: () => (
                         <Text style={styles.homePageHeader}>Публікації</Text>
@@ -58,7 +52,6 @@ const Home = () => {
             <AppTabs.Screen
                 name="CreatePostsScreen"
                 component={CreatePostsScreen}
-                // initialParams={{ user: route.params.params.user }}
                 options={{
                     tabBarStyle: { display: "none" },
                     headerTitle: () => (
@@ -72,9 +65,6 @@ const Home = () => {
                                 onPress={() =>
                                     navigation.navigate("Home", {
                                         screen: "PostsScreen",
-                                        // params: {
-                                        //     user: userPhoto,
-                                        // },
                                     })
                                 }
                             />

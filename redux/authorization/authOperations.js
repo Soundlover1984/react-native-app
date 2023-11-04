@@ -1,23 +1,21 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-
-import { auth } from "../../firebase/config";
 import {
     createUserWithEmailAndPassword,
     signInWithEmailAndPassword,
     updateProfile,
 } from "firebase/auth";
+
+import {
+    deleteObject,
+    getDownloadURL,
+    getMetadata,
+    ref,
+    uploadBytesResumable,
+} from "firebase/storage";
 import { storage } from "../../firebase/config";
-import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
-// import { getStorage, ref, uploadBytesResumable } from "firebase/storage";
+import { auth } from "../../firebase/config";
 
-// const storage = getStorage();
-
-// const upload = async (file, currentUser) => {
-//     const fileRef = ref(storage, "profileAvatars/" + currentUser + ".png");
-//     const snapshot = await uploadBytesResumable(fileRef, file);
-// };
-
-const upload = async (file, currentUser) => {
+export const upload = async (file, currentUser) => {
     const response = await fetch(file);
     const blob = await response.blob();
     const fileRef = ref(storage, "profileAvatars/" + currentUser + ".png");
@@ -39,11 +37,34 @@ export const registration = createAsyncThunk(
                     displayName: userName,
                     photoURL: userPhoto,
                 });
-                console.log(userPhoto);
-
                 await upload(userPhoto, tryRegistration.user.uid);
                 return tryRegistration.user;
             }
+        } catch (error) {
+            return thunkAPI.rejectWithValue(error.message);
+        }
+    }
+);
+
+export const uploadNewAvatar = createAsyncThunk(
+    "authorization/uploadNewAvatar",
+    async (data, thunkAPI) => {
+        try {
+            let photoFromDB = null;
+            const response = await fetch(data[1]);
+            const blob = await response.blob();
+            const fileRef = ref(storage, "profileAvatars/" + data[0] + ".png");
+            try {
+                const exitingFile = await getMetadata(fileRef);
+                await deleteObject(fileRef);
+            } catch (error) {
+                console.log(error);
+            }
+            await uploadBytesResumable(fileRef, blob);
+            await getDownloadURL(fileRef).then(data => {
+                photoFromDB = data;
+            });
+            return photoFromDB;
         } catch (error) {
             return thunkAPI.rejectWithValue(error.message);
         }
@@ -63,26 +84,12 @@ export const login = createAsyncThunk(
             );
             if (tryLogin) {
                 const uid = tryLogin.user.uid;
-                // console.log(uid);
                 const userPhotoName = uid + ".png";
-                // console.log(userPhotoName);
-
-                // let imageRef = storage.ref("profileAvatars/" + userPhotoName);
-                // imageRef
-                //     .getDownloadURL()
-                //     .then(url => {
-                //         //from url you can fetched the uploaded image easily
-                //         this.setState({ profileImageUrl: url });
-                //     })
-                //     .catch(e =>
-                //         console.log("getting downloadURL of image error => ", e)
-                //     );
                 const referense = ref(
                     storage,
                     "profileAvatars/" + userPhotoName
                 );
                 await getDownloadURL(referense).then(data => {
-                    // console.log(data);
                     userPhoto = data;
                 });
             }
@@ -95,11 +102,11 @@ export const login = createAsyncThunk(
 
 export const logout = createAsyncThunk(
     "authorization/logout",
-    async (userData, thunkAPI) => {
+    async (_, thunkAPI) => {
         try {
             const result = await auth.signOut();
             return result;
-            return tryLogin._tokenResponse;
+            // return tryLogin._tokenResponse;
         } catch (error) {
             return thunkAPI.rejectWithValue(error.message);
         }

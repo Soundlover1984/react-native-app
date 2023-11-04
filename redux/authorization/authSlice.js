@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-import { registration, login, logout } from "./authOperations";
+import { registration, login, logout, uploadNewAvatar } from "./authOperations";
 
 const initialState = {
     userId: "",
@@ -42,7 +42,6 @@ const authorizationSlice = createSlice({
             })
             .addCase(login.fulfilled, (state, { payload }) => {
                 const { email, displayName, uid } = payload[0];
-                console.log(payload[1]);
                 const photoURL = payload[1];
                 state.userId = uid;
                 state.userName = displayName;
@@ -62,17 +61,33 @@ const authorizationSlice = createSlice({
                 state.isLoading = true;
             })
             .addCase(logout.fulfilled, state => {
-                state.userId = "";
-                state.userName = "";
-                state.email = "";
-                state.userPhoto = "";
+                state.userId = null;
+                state.userName = null;
+                state.email = null;
+                state.userPhoto = null;
                 state.error = null;
                 state.isAuthorized = false;
                 state.isLoading = false;
             })
             .addCase(logout.rejected, (state, { payload }) => {
                 state.error = payload;
+                state.userId = null;
+                state.userName = null;
+                state.email = null;
+                state.userPhoto = null;
                 state.isAuthorized = false;
+                state.isLoading = false;
+            })
+            .addCase(uploadNewAvatar.pending, state => {
+                state.error = null;
+                state.isLoading = true;
+            })
+            .addCase(uploadNewAvatar.fulfilled, (state, { payload }) => {
+                state.userPhoto = payload;
+                state.error = null;
+                state.isLoading = false;
+            })
+            .addCase(uploadNewAvatar.rejected, state => {
                 state.isLoading = false;
             });
     },

@@ -1,24 +1,29 @@
 import { View, ScrollView } from "react-native";
-import { useSelector } from "react-redux";
-// import { useRoute } from "@react-navigation/native";
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect } from "react";
 
 import { styles } from "./PostsScreenStyles";
 import AuthenticatedUserInfo from "../../components/AuthenticatedUserInfo";
 import PostComponent from "../../components/PostComponent/PostComponent";
-import { posts } from "../../posts";
+import { selectAllPosts } from "../../redux/posts/postsSelectors";
 import {
-    selectUserPhoto,
-    selectIsAuthorized,
-    selectUserId,
-} from "../../redux/authorization/authSelectors";
+    getCommmentatorsPhoto,
+    getPosts,
+} from "../../redux/posts/postsOperations";
 
 const PostsScreen = () => {
-    // const userPhoto = useSelector(selectUserPhoto);
-    // const isAuthorized = useSelector(selectIsAuthorized);
-    // const useId = useSelector(selectUserId);
-    // console.log(userPhoto);
-    // console.log(isAuthorized);
-    // console.log(useId);
+    const posts = useSelector(selectAllPosts);
+    const dispatch = useDispatch();
+    const sortedPosts = [...posts].sort((a, b) => {
+        const dateA = Object.values(a)[0].date;
+        const dateB = Object.values(b)[0].date;
+        return new Date(dateB).getTime() - new Date(dateA).getTime();
+    });
+
+    useEffect(() => {
+        dispatch(getPosts());
+        dispatch(getCommmentatorsPhoto());
+    }, [dispatch]);
 
     return (
         <View style={styles.postsScreenContainer}>
@@ -27,27 +32,32 @@ const PostsScreen = () => {
                 style={{ margin: 0, padding: 16 }}
                 showsVerticalScrollIndicator={false}
             >
-                {posts.map(
-                    ({
-                        img,
-                        description,
-                        likes,
-                        comments,
-                        locationName,
-                        geoLocation,
-                    }) => {
+                {sortedPosts.length === 0 ? (
+                    <View></View>
+                ) : (
+                    sortedPosts.map(item => {
+                        const key = Object.keys(item)[0];
+                        const {
+                            img,
+                            description,
+                            likes,
+                            comments,
+                            locationName,
+                            geoLocation,
+                        } = item[key];
                         return (
                             <PostComponent
-                                key={description}
+                                key={key}
+                                id={key}
                                 image={img}
                                 description={description}
                                 likes={likes}
-                                comments={comments}
+                                comments={comments ? comments : []}
                                 locationName={locationName}
                                 geoLocation={geoLocation}
                             />
                         );
-                    }
+                    })
                 )}
             </ScrollView>
         </View>

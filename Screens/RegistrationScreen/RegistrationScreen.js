@@ -20,11 +20,7 @@ import RegistrationImageAddButton from "../../components/RegistrationImageAddBut
 import RegistrationImageRemoveButton from "../../components/RegistrationImageRemoveButton";
 import InputComponent from "../../components/InputComponent";
 import { registration } from "../../redux/authorization/authOperations";
-import {
-    selectIsAuthorized,
-    selectUserPhoto,
-    selectUserId,
-} from "../../redux/authorization/authSelectors";
+import { selectIsAuthorized } from "../../redux/authorization/authSelectors";
 
 const RegistrationScreen = () => {
     const dispatch = useDispatch();
@@ -35,8 +31,6 @@ const RegistrationScreen = () => {
     const [showPassword, setShowPassword] = useState(false);
     const [userAvatar, setUserAavatar] = useState(null);
     const isAutorized = useSelector(selectIsAuthorized);
-    const userPhoto = useSelector(selectUserPhoto);
-    const useId = useSelector(selectUserId);
 
     const togglePasswordVisibility = () => {
         setShowPassword(!showPassword);
@@ -51,10 +45,10 @@ const RegistrationScreen = () => {
             alert("Please enter valid credentials!");
             return;
         }
-                if (!userAvatar) {
-                    alert("Please add user photo!");
-                    return;
-                }
+        if (!userAvatar) {
+            alert("Please add user photo!");
+            return;
+        }
         dispatch(
             registration({
                 userName: login,
@@ -66,20 +60,14 @@ const RegistrationScreen = () => {
             result.type === "authorization/registration/fulfilled"
                 ? navigation.navigate("Home", {
                       screen: "PostScreen",
-                      params: {
-                          user: email,
-                      },
                   })
                 : alert("Incorect data");
         });
+
         isAutorized &&
             navigation.navigate("Home", {
                 screen: "PostScreen",
-                params: {
-                    user: email,
-                },
             });
-        // navigation.navigate("MapScreen");
     };
 
     const uploadAvatar = async () => {
@@ -132,7 +120,6 @@ const RegistrationScreen = () => {
                         <View style={styles.registrationForm}>
                             <InputComponent
                                 placeholder={"Логін"}
-                                placeholderTextColor="#BDBDBD"
                                 type={"text"}
                                 name={"login"}
                                 value={login}
@@ -140,7 +127,6 @@ const RegistrationScreen = () => {
                             />
                             <InputComponent
                                 placeholder={"Адреса електронної пошти"}
-                                placeholderTextColor="#BDBDBD"
                                 type={"email"}
                                 name={"email"}
                                 value={email}
@@ -150,7 +136,6 @@ const RegistrationScreen = () => {
                             <View style={{ position: "relative" }}>
                                 <InputComponent
                                     placeholder={"Пароль"}
-                                    placeholderTextColor="#BDBDBD"
                                     type={"password"}
                                     name={"password"}
                                     secureTextEntry={!showPassword}
@@ -185,7 +170,6 @@ const RegistrationScreen = () => {
                                 fontSize: 16,
                                 textAlign: "center",
                                 color: "#ffffff",
-                                fontWeight: 400,
                             }}
                         >
                             Зареєструватися
@@ -204,7 +188,6 @@ const RegistrationScreen = () => {
                                 fontSize: 16,
                                 color: "#1B4371",
                                 textAlign: "center",
-                                fontWeight: 400,
                             }}
                         >
                             Вже є акаунт?
@@ -217,7 +200,6 @@ const RegistrationScreen = () => {
                                     gap: 3,
                                     fontSize: 16,
                                     color: "#1B4371",
-                                    fontWeight: 400,
                                 }}
                             >
                                 Увійти
@@ -231,5 +213,3 @@ const RegistrationScreen = () => {
 };
 
 export default RegistrationScreen;
-
-

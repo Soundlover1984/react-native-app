@@ -30,7 +30,7 @@ export const styles = StyleSheet.create({
         margin: 0,
         padding: 0,
         marginBottom: 32,
-        fontFamily: "Roboto-Medium",
+        fontFamily: "Roboto-Bold",
         fontWeight: 500,
         fontSize: 30,
         lineHeight: 35,
@@ -38,7 +38,7 @@ export const styles = StyleSheet.create({
     },
     registrationFormSubmitButton: {
         width: "100%",
-        height: 51,
+        height: 50,
         marginBottom: 16,
         padding: 16,
         borderRadius: 100,

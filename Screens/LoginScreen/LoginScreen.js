@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { useNavigation, useRoute } from "@react-navigation/native";
+import React, { useState, useEffect } from "react";
+import { useNavigation } from "@react-navigation/native";
 import {
     View,
     Text,
@@ -14,11 +14,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { styles } from "./LoginScreenStyles";
 import Background from "../../assets/images/app_background.jpg";
 import InputComponent from "../../components/InputComponent";
-import {
-    selectIsAuthorized,
-    selectUserPhoto,
-    selectUserId,
-} from "../../redux/authorization/authSelectors";
+import { selectIsAuthorized } from "../../redux/authorization/authSelectors";
 import { login } from "../../redux/authorization/authOperations";
 
 const LoginScreen = () => {
@@ -28,8 +24,6 @@ const LoginScreen = () => {
     const [password, setPassword] = useState("");
     const [showPassword, setShowPassword] = useState(false);
     const isAutorized = useSelector(selectIsAuthorized);
-    const userPhoto = useSelector(selectUserPhoto);
-     const useId = useSelector(selectUserId);
 
     const navigateToPostsScreen = () => {
         navigation.navigate("Home", {
@@ -37,7 +31,11 @@ const LoginScreen = () => {
         });
     };
 
-    isAutorized && navigateToPostsScreen();
+    useEffect(() => {
+        if (isAutorized) {
+            navigateToPostsScreen();
+        }
+    }, [isAutorized]);
 
     const togglePasswordVisibility = () => {
         setShowPassword(!showPassword);
@@ -93,13 +91,7 @@ const LoginScreen = () => {
                                     }}
                                     onPress={togglePasswordVisibility}
                                 >
-                                    <Text
-                                        style={{
-                                            color: "#1B4371",
-                                            fontSize: 16,
-                                            fontWeight: 400,
-                                        }}
-                                    >
+                                    <Text style={{ color: "#1B4371" }}>
                                         {showPassword
                                             ? "Приховати"
                                             : "Показати"}
@@ -119,7 +111,6 @@ const LoginScreen = () => {
                                 fontSize: 16,
                                 textAlign: "center",
                                 color: "#ffffff",
-                                fontWeight: 400,
                             }}
                         >
                             Увійти
@@ -152,7 +143,6 @@ const LoginScreen = () => {
                                     fontSize: 16,
                                     color: "#1B4371",
                                     textAlign: "center",
-                                    textDecorationLine: "underline",
                                 }}
                             >
                                 Зареєструватися
@@ -166,4 +156,3 @@ const LoginScreen = () => {
 };
 
 export default LoginScreen;
-

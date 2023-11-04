@@ -2,28 +2,37 @@ import { View, Text, Image } from "react-native";
 import { useSelector } from "react-redux";
 
 import { styles } from "./AuthenticatedUserInfoStyles";
-import { selectUserPhoto } from "../../redux/authorization/authSelectors";
+import {
+    selectUserPhoto,
+    selectUserName,
+    selectUserEmail,
+} from "../../redux/authorization/authSelectors";
 
 const AuthenticatedUserInfo = () => {
     const userPhoto = useSelector(selectUserPhoto);
+    const userName = useSelector(selectUserName);
+    const userEmail = useSelector(selectUserEmail);
     return (
         <View style={styles.userContainer}>
-            <Image
-                // source={require("../../assets/images/User.jpg")}
-                source={{ uri: userPhoto }}
-                style={{ width: 60, height: 60, borderRadius: 16 }}
-            />
+            {userPhoto !== "" ? (
+                <Image
+                    source={{ uri: userPhoto }}
+                    style={{ width: 60, height: 60, borderRadius: 16 }}
+                />
+            ) : (
+                <View></View>
+            )}
+
             <View>
                 <Text style={{ fontSize: 13, fontWeight: 700 }}>
-                    Natali Romanova
+                    {userName}
                 </Text>
                 <Text style={{ fontSize: 11, fontWeight: 400 }}>
-                    email@example.com
+                    {userEmail}
                 </Text>
             </View>
         </View>
     );
 };
 
-export default AuthenticatedUserInfo
-
+export default AuthenticatedUserInfo;

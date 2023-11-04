@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { View, Image, Text, ScrollView, ImageBackground } from "react-native";
 import * as ImagePicker from "expo-image-picker";
+import { useDispatch, useSelector } from "react-redux";
 
 import { styles } from "./ProfileScreenStyles";
 import Background from "../../assets/images/app_background.jpg";
@@ -9,12 +10,36 @@ import RegistrationImageAddButton from "../../components/RegistrationImageAddBut
 import RegistrationImageRemoveButton from "../../components/RegistrationImageRemoveButton";
 import PostComponent from "../../components/PostComponent/PostComponent";
 import LogoutButton from "../../components/LogoutButton";
-import { posts } from "../../posts";
+import {
+    selectUserPhoto,
+    selectUserName,
+    selectUserId,
+} from "../../redux/authorization/authSelectors";
+import { selectAllPosts } from "../../redux/posts/postsSelectors";
+import { getPosts } from "../../redux/posts/postsOperations";
+import { uploadNewAvatar } from "../../redux/authorization/authOperations";
 
 const ProfileScreen = () => {
-    const [login, setLogin] = useState("Natali Romanova");
-    const [userAvatar, setUserAavatar] = useState(userAvatar);
+    const userId = useSelector(selectUserId);
+    const userPosts = useSelector(selectAllPosts).filter(
+        item => Object.values(item)[0].userId === userId
+    );
+
+    const sortedUserPosts = [...userPosts].sort((a, b) => {
+        const dateA = Object.values(a)[0].date;
+        const dateB = Object.values(b)[0].date;
+        return new Date(dateB).getTime() - new Date(dateA).getTime();
+    });
+
+    const userPhoto = useSelector(selectUserPhoto);
+    const userName = useSelector(selectUserName);
+    const [userAvatar, setUserAavatar] = useState(userPhoto);
     const navigation = useNavigation();
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        dispatch(getPosts());
+    }, [sortedUserPosts]);
 
     const handleRemoveImage = () => {
         setUserAavatar(null);
@@ -28,7 +53,10 @@ const ProfileScreen = () => {
             quality: 1,
         });
 
-        if (!result.canceled) setUserAavatar(result.assets[0].uri);
+        if (!result.canceled) {
+            setUserAavatar(result.assets[0].uri);
+            dispatch(uploadNewAvatar([userId, result.assets[0].uri]));
+        }
     };
 
     return (
@@ -66,33 +94,34 @@ const ProfileScreen = () => {
                     )}
                 </View>
 
-                <Text style={styles.profileHeader}>{login}</Text>
+                <Text style={styles.profileHeader}>{userName}</Text>
                 <ScrollView
                     style={{ margin: 0, padding: 0 }}
                     showsVerticalScrollIndicator={false}
                 >
-                    {posts.map(
-                        ({
+                    {sortedUserPosts.map(item => {
+                        const key = Object.keys(item)[0];
+                        const {
                             img,
                             description,
                             likes,
                             comments,
                             locationName,
                             geoLocation,
-                        }) => {
-                            return (
-                                <PostComponent
-                                    key={description}
-                                    image={img}
-                                    description={description}
-                                    likes={likes}
-                                    comments={comments}
-                                    locationName={locationName}
-                                    geoLocation={geoLocation}
-                                />
-                            );
-                        }
-                    )}
+                        } = item[key];
+                        return (
+                            <PostComponent
+                                key={key}
+                                id={key}
+                                image={img}
+                                description={description}
+                                likes={likes}
+                                comments={comments ? comments : []}
+                                locationName={locationName}
+                                geoLocation={geoLocation}
+                            />
+                        );
+                    })}
                 </ScrollView>
             </View>
         </ImageBackground>

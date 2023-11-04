@@ -1,9 +1,16 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-import { addPost, getPosts } from "./postsOperations";
+import {
+    addPost,
+    getPosts,
+    addComment,
+    getCommmentatorsPhoto,
+    addLike,
+} from "./postsOperations";
 
 const initialState = {
     posts: [],
+    commentatorsPhoto: [],
     error: null,
     isLoading: false,
 };
@@ -36,6 +43,55 @@ const postsSlice = createSlice({
                 state.isLoading = false;
             })
             .addCase(getPosts.rejected, (state, { payload }) => {
+                state.error = payload;
+                state.isLoading = false;
+            })
+            .addCase(addComment.pending, state => {
+                state.error = null;
+                state.isLoading = true;
+            })
+            .addCase(addComment.fulfilled, (state, { payload }) => {
+                const postIndex = state.posts.findIndex(obj =>
+                    obj.hasOwnProperty(payload[0])
+                );
+                if (postIndex !== -1) {
+                    state.posts[postIndex][payload[0]] = payload[1];
+                }
+                state.error = null;
+                state.isLoading = false;
+            })
+            .addCase(addComment.rejected, (state, { payload }) => {
+                state.error = payload;
+                state.isLoading = false;
+            })
+            .addCase(getCommmentatorsPhoto.pending, state => {
+                state.error = null;
+                state.isLoading = true;
+            })
+            .addCase(getCommmentatorsPhoto.fulfilled, (state, { payload }) => {
+                state.commentatorsPhoto = payload;
+                state.error = null;
+                state.isLoading = false;
+            })
+            .addCase(getCommmentatorsPhoto.rejected, (state, { payload }) => {
+                state.error = payload;
+                state.isLoading = false;
+            })
+            .addCase(addLike.pending, state => {
+                state.error = null;
+                state.isLoading = true;
+            })
+            .addCase(addLike.fulfilled, (state, { payload }) => {
+                const postIndex = state.posts.findIndex(obj =>
+                    obj.hasOwnProperty(payload[0])
+                );
+                if (postIndex !== -1) {
+                    state.posts[postIndex][payload[0]] = payload[1];
+                }
+                state.error = null;
+                state.isLoading = false;
+            })
+            .addCase(addLike.rejected, (state, { payload }) => {
                 state.error = payload;
                 state.isLoading = false;
             });

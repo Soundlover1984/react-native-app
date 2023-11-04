@@ -3,7 +3,7 @@ import { StyleSheet } from "react-native";
 export const styles = StyleSheet.create({
     loginContainer: {
         width: "100%",
-        height: "63%",
+        height: "60%",
         marginTop: "auto",
         backgroundColor: "#ffffff",
         borderTopLeftRadius: 20,
@@ -20,7 +20,7 @@ export const styles = StyleSheet.create({
     loginFormHeader: {
         marginTop: 32,
         marginBottom: 32,
-        fontFamily: "Roboto-Medium",
+        fontFamily: "Roboto-Bold",
         fontWeight: 500,
         fontSize: 30,
         lineHeight: 35,
@@ -28,7 +28,7 @@ export const styles = StyleSheet.create({
     },
     loginFormSubmitButton: {
         width: "100%",
-        height: 51,
+        height: 50,
         marginBottom: 16,
         padding: 16,
         borderRadius: 100,
